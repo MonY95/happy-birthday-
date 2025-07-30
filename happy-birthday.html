@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С Днем Рождения!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #fff0f5, #ffdfea);
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        h1 {
+            color: #ff1493;
+            margin: 20px 0 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 2.8em;
+            animation: titleGlow 2s infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 10px rgba(255, 20, 147, 0.3); }
+            100% { text-shadow: 0 0 20px rgba(255, 20, 147, 0.6); }
+        }
+        
+        .main-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding-bottom: 50px;
+        }
+        
+        .envelope-container {
+            position: relative;
+            margin: 40px auto;
+            width: 400px;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+        
+        .envelope {
+            width: 320px;
+            height: 200px;
+            background: linear-gradient(145deg, #ff69b4, #ff1493);
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            margin: 0 auto;
+            transition: all 0.5s;
+            z-index: 2;
+            box-shadow: 0 15px 30px rgba(255, 105, 180, 0.4);
+        }
+        
+        .envelope:before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-bottom: 100px solid #ff85c2;
+            transform-origin: bottom;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            filter: drop-shadow(0 -5px 5px rgba(0,0,0,0.1));
+        }
+        
+        .envelope.open:before {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+        
+        .letter {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 290px;
+            max-height: 300px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-sizing: border-box;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            display: none;
+            z-index: 1;
+            overflow-y: auto;
+            text-align: left;
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .letter.show {
+            display: block;
+            animation: letterAppear 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+            bottom: 120px;
+        }
+        
+        @keyframes letterAppear {
+            0% { opacity: 0; transform: translateX(-50%) scale(0.8); }
+            100% { opacity: 1; transform: translateX(-50%) scale(1); }
+        }
+        
+        .photo-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin: 60px auto;
+            max-width: 900px;
+            z-index: 5;
+            position: relative;
+        }
+        
+        .photo-frame {
+            width: 180px;
+            height: 180px;
+            border: 8px solid #ff69b4;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(255, 105, 180, 0.3);
+            transition: all 0.4s;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .photo-frame:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 30px rgba(255, 105, 180, 0.5);
+        }
+        
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .photo-frame .placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffebf2;
+            color: #ff69b4;
+            font-size: 16px;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 28px;
+            color: #ff69b4;
+            animation: float 5s infinite ease-in-out;
+            opacity: 0.8;
+            z-index: 1;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+        
+        .background-heart {
+            position: fixed;
+            font-size: 24px;
+            color: rgba(255, 20, 147, 0.3);
+            animation: floatBg 8s infinite ease-in-out;
+            z-index: 0;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            25% { transform: translateY(-25px) rotate(5deg) scale(1.1); }
+            50% { transform: translateY(-15px) rotate(-5deg) scale(1); }
+            75% { transform: translateY(-35px) rotate(8deg) scale(1.2); }
+        }
+        
+        @keyframes floatBg {
+            0%, 100% { transform: translateY(0) translateX(0) rotate(0deg) scale(1); }
+            25% { transform: translateY(-40px) translateX(10px) rotate(10deg) scale(1.2); }
+            50% { transform: translateY(-20px) translateX(-15px) rotate(-15deg) scale(0.9); }
+            75% { transform: translateY(-50px) translateX(20px) rotate(20deg) scale(1.3); }
+        }
+        
+        .hearts-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .background-hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .footer {
+            margin: 40px 0 20px;
+            color: #ff69b4;
+            font-size: 1.1em;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes heartRise {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { transform: translateY(-150px) scale(1.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-hearts" id="background-hearts"></div>
+    
+    <div class="main-container">
+        <h1>С Днем Рождения!</h1>
+        
+        <div class="envelope-container">
+            <div class="hearts-container" id="hearts-container"></div>
+            <div class="envelope" id="envelope">
+                <div class="letter" id="letter">
+                    <p>С днем рождения моя любимая Владочка! ❤️❤️❤️</p>
+                    <p>Желаю тебе всего самого наилучшего, чтобы ты всегда уверенно шла к своим целям и не оглядывалась, и чтобы ты была всегда счастлива и никогда ни о чем не жалела! 🫶🏻</p>
+                    <p>Сияй как солнышко! Ты самая красивая, милая и добрая на свете! 💋 Я очень ценю, что ты появилась в моей жизни, и я бесконечно рада, что встретила тебя. Что бы мы ни проходили, у меня для тебя отдельное место в сердце! ❤️‍🔥</p>
+                    <p>Пусть этот день оставит у тебя самые теплые и радостные воспоминания! ❤️‍🩹</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="photo-grid" id="photo-grid">
+            <!-- Фотографии будут добавлены через JavaScript -->
+        </div>
+        
+        <div class="footer">
+            С любовью и самыми теплыми пожеланиями!
+        </div>
+    </div>
+    
+    <script>
+        const envelope = document.getElementById('envelope');
+        const letter = document.getElementById('letter');
+        const photoGrid = document.getElementById('photo-grid');
+        const heartsContainer = document.getElementById('hearts-container');
+        const backgroundHearts = document.getElementById('background-hearts');
+        
+        // Массив с фотографиями (замените на свои)
+        const photoUrls = [
+           'https://i.ibb.co/fGdp2mqs/photo1-jpg.jpg',    
+            'https://i.ibb.co/BV9nZbfs/photo2-jpg.jpg',   
+            'https://i.ibb.co/VYcp1xdf/photo3-jpg.jpg',   
+            'https://i.ibb.co/9kdH03Nj/photo4-jpg.jpg',    
+            'https://i.ibb.co/N2vWRChd/photo5-jpg.jpg'     
+        ];
+        
+        // Создание элементов с фотографиями
+        function createPhotoElements() {
+            photoUrls.forEach((photoUrl, index) => {
+                const frame = document.createElement('div');
+                frame.className = 'photo-frame';
+                
+                const img = document.createElement('img');
+                img.src = photoUrl;
+                img.alt = `Фото ${index + 1}`;
+                
+                img.onerror = function() {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'placeholder';
+                    placeholder.textContent = `Фото ${index+1}`;
+                    frame.innerHTML = '';
+                    frame.appendChild(placeholder);
+                };
+                
+                frame.appendChild(img);
+                photoGrid.appendChild(frame);
+            });
+        }
+        
+        // Создание сердечек вокруг конверта
+        function createHearts() {
+            const heartCount = 20;
+            const containerWidth = 400;
+            const containerHeight = 300;
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                
+                const angle = (i / heartCount) * Math.PI * 2;
+                const radius = 180 + Math.random() * 50;
+                const x = containerWidth/2 + Math.cos(angle) * radius - 15;
+                const y = containerHeight/2 + Math.sin(angle) * radius - 15;
+                
+                heart.style.left = `${x}px`;
+                heart.style.top = `${y}px`;
+                heart.style.animationDelay = `${Math.random() * 5}s`;
+                heart.style.fontSize = `${20 + Math.random() * 20}px`;
+                heart.style.opacity = `${0.6 + Math.random() * 0.4}`;
+                
+                heartsContainer.appendChild(heart);
+            }
+        }
+        
+        // Создание фоновых сердечек
+        function createBackgroundHearts() {
+            const heartCount = 80;
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'background-heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = `${Math.random() * 100}%`;
+                heart.style.top = `${Math.random() * 100}%`;
+                heart.style.animationDelay = `${Math.random() * 8}s`;
+                heart.style.fontSize = `${15 + Math.random() * 40}px`;
+                heart.style.opacity = `${0.1 + Math.random() * 0.3}`;
+                heart.style.animationDuration = `${5 + Math.random() * 10}s`;
+                
+                backgroundHearts.appendChild(heart);
+            }
+        }
+        
+        // Открытие/закрытие конверта
+        envelope.addEventListener('click', function() {
+            this.classList.toggle('open');
+            letter.classList.toggle('show');
+            
+            if (this.classList.contains('open')) {
+                addExtraHearts();
+            }
+        });
+        
+        // Добавление дополнительных сердечек при открытии конверта
+        function addExtraHearts() {
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = `${50 + Math.random() * 300}px`;
+                heart.style.top = `${50 + Math.random() * 200}px`;
+                heart.style.animationDelay = `${Math.random() * 3}s`;
+                heart.style.fontSize = `${30 + Math.random() * 30}px`;
+                heart.style.opacity = '0';
+                heart.style.animation = `heartRise 3s ${i*0.1}s forwards`;
+                
+                document.querySelector('.envelope-container').appendChild(heart);
+            }
+        }
+        
+        // Инициализация
+        window.onload = function() {
+            createHearts();
+            createBackgroundHearts();
+            createPhotoElements();
+            
+            // Сердечки при движении мыши
+            document.addEventListener('mousemove', function(e) {
+                if (Math.random() > 0.95) {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = '❤️';
+                    heart.style.left = `${e.clientX - 15}px`;
+                    heart.style.top = `${e.clientY - 15}px`;
+                    heart.style.animation = 'heartRise 2s forwards';
+                    heart.style.fontSize = `${20 + Math.random() * 30}px`;
+                    document.body.appendChild(heart);
+                    
+                    setTimeout(() => heart.remove(), 2000);
+                }
+            });
+        };
+    </script>
+</body>
+</html>
